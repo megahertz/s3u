@@ -66,8 +66,8 @@ export class S3Parser {
   });
 
   addProvider(provider: S3Provider): void;
+  getProviderById(providerId: string): S3Provider;
   getProvidersByHostName(hostName: string): S3Provider[];
-  getProviderById(providerId: string): S3Provider[];
   getProvidersForParse(options: {
     url: string,
     providerId?: string
