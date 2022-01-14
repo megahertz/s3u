@@ -1,0 +1,42 @@
+{
+  "name": "s3u",
+  "version": "0.0.0",
+  "description": "S3 URL manipulation helper",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "eslint 'src/**/*.js'",
+    "test": "humile",
+    "test:full": "npm run test && npm run lint && tsc --noEmit",
+    "postversion": "git push && git push --tags",
+    "prepack": "npm run test:full",
+    "preversion": "npm run test:full"
+  },
+  "repository": "megahertz/s3u",
+  "files": [
+    "src/*",
+    "!__specs__"
+  ],
+  "keywords": [
+    "s3",
+    "aws",
+    "url",
+    "link",
+    "stackpath",
+    "spaces"
+  ],
+  "author": "Alexey Prokhorov",
+  "license": "MIT",
+  "bugs": "https://github.com/megahertz/s3u/issues",
+  "homepage": "https://github.com/megahertz/s3u#readme",
+  "engines": {
+    "node": ">=12.0"
+  },
+  "typings": "src/index.d.ts",
+  "devDependencies": {
+    "eslint": "*",
+    "eslint-config-airbnb-base": "*",
+    "eslint-plugin-import": "*",
+    "humile": "*",
+    "typescript": "*"
+  }
+}
