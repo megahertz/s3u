@@ -1,5 +1,5 @@
 # s3u
-[![Tests](https://github.com/megahertz/s3u/workflows/Tests/badge.svg)](https://github.com/megahertz/s3u/actions?query=workflow%3ATests)
+[![Tests](https://github.com/megahertz/s3u/actions/workflows/tests.yml/badge.svg)](https://github.com/megahertz/s3u/actions/workflows/tests.yml)
 [![npm version](https://badge.fury.io/js/s3u.svg)](https://badge.fury.io/js/s3u)
 
 ## Description
