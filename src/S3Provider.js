@@ -13,7 +13,7 @@ class S3Provider {
 
   constructor({ id, domain, endpoint, title } = {}) {
     this.domain = domain;
-    this.endpoint = endpoint || `https://s3.{region}.${domain}`;
+    this.endpoint = endpoint || (domain && `https://s3.{region}.${domain}`);
     this.id = id || domain;
     this.title = title;
   }
@@ -53,6 +53,10 @@ class S3Provider {
   }
 
   getEndpoint({ region } = {}) {
+    if (!this.endpoint) {
+      throw new Error('Cannot detect an endpoint for the S3 provider');
+    }
+
     if (region) {
       return this.endpoint.replace('{region}', region);
     }

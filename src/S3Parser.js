@@ -6,7 +6,7 @@ class S3Parser {
   providers = [];
   fallbackProvider = null;
 
-  constructor({ providers = [], fallbackProvider = null }) {
+  constructor({ providers = [], fallbackProvider = null } = {}) {
     providers.forEach((provider) => this.addProvider(provider));
     this.fallbackProvider = fallbackProvider;
   }
@@ -46,7 +46,7 @@ class S3Parser {
     try {
       const urlObj = new URL(url);
 
-      if (urlObj.protocol === 's3') {
+      if (urlObj.protocol === 's3:') {
         return [this.getProviderById('amazonaws.com')];
       }
 
@@ -71,7 +71,7 @@ class S3Parser {
     }
 
     try {
-      const s3Url = this.fallbackProvider?.parseUrl(url);
+      const s3Url = this.fallbackProvider?.parseUrl({ url });
       if (s3Url) {
         return s3Url;
       }
