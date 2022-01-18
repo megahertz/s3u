@@ -4,7 +4,7 @@
 
 ## Description
 
-S3 URL manipulation helper
+S3 URL manipulation helper similar to standard URL class
 
 ### Key features
 
@@ -23,12 +23,13 @@ Install with [npm](https://npmjs.org/package/s3u):
 ```js
 const { S3Url } = require('s3u');
 
-const url = S3Url.fromUrl('https://mybucket.s3.amazonaws.com/');
+const url = new S3Url('https://mybucket.s3.amazonaws.com/');
 
 url.key = 'My file.txt';
+url.region = 'eu-west-2'
 
-console.log(url.toString());
-// https://mybucket.s3.amazonaws.com/My+file.txt
+console.log(url.href);
+// https://mybucket.s3.eu-west-2.amazonaws.com/My+file.txt
 ```
 
 ## License

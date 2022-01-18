@@ -42,20 +42,20 @@ class S3Url {
     this.parser = parser;
   }
 
+  get href() {
+    if (!this.provider) {
+      throw new Error('Cannot make url from invalid S3Url');
+    }
+
+    return this.provider.buildUrl({ s3Url: this });
+  }
+
   clone(newAttrs = {}) {
     return new S3Url({ ...this, newAttrs });
   }
 
   isValid() {
     return typeof this.provider === 'object';
-  }
-
-  makeUrl() {
-    if (!this.provider) {
-      throw new Error('Cannot make url from invalid S3Url');
-    }
-
-    return this.provider.buildUrl({ s3Url: this });
   }
 
   setBucket(bucket) {
