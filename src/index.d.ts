@@ -87,4 +87,7 @@ export class S3Parser {
 
 export const s3Parser: S3Parser;
 
+export function decodeS3Key(key: string): string;
+export function encodeS3Key(key: string): string;
+
 export default S3Url;

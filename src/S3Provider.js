@@ -3,7 +3,7 @@
 /* eslint-disable no-unused-vars */
 
 const S3Url = require('./S3Url');
-const { decodeS3Key, encodeS3Key } = require('./utils');
+const { decodeS3Key, encodeS3Key } = require('./utils/utils');
 
 class S3Provider {
   domain;
