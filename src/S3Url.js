@@ -50,12 +50,12 @@ class S3Url {
     return this.provider.buildUrl({ s3Url: this });
   }
 
-  clone(newAttrs = {}) {
-    return new S3Url({ ...this, newAttrs });
+  get isValid() {
+    return Boolean(this.provider && typeof this.provider === 'object');
   }
 
-  isValid() {
-    return typeof this.provider === 'object';
+  clone(newAttrs = {}) {
+    return new S3Url({ ...this, newAttrs });
   }
 
   setBucket(bucket) {

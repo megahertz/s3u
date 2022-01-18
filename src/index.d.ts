@@ -15,14 +15,14 @@ export class S3Url {
   username: string;
 
   readonly href: string;
+  readonly isValid: string;
 
   constructor(attrs: Partial<S3Url> | string);
 
   static fromUrl(url: string): S3Url;
 
   clone(newAttrs?: Partial<S3Url>): S3Url;
-  isValid(): boolean;
-  makeUrl(): string;
+
   setBucket(bucket: string): void;
   setBucketPosition(position: 'hostname' | 'pathname'): void;
   setDomain(domain: string): void;

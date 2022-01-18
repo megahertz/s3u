@@ -53,6 +53,26 @@ describe('integration test', () => {
       'https://test.s3.eu-west-2.stackpathstorage.com/file.txt'
     );
   });
+
+  describe('Generic', () => {
+    itIsConvertedFine('http://example.com/');
+    itIsConvertedFine('https://fra1.example.com/');
+    itIsConvertedFine('https://test.fra1.example.com/');
+    itIsConvertedFine('https://test.fra1.example.com/');
+    itIsConvertedFine('https://fra1.example.com/test/file.txt');
+    itIsConvertedFine('https://test.fra1.example.com/file.txt');
+    itIsConvertedFine('https://fra1.example.com/test/file.txt');
+    itIsConvertedFine('https://test.fra1.example.com/file.txt');
+
+    it('return invalid url when cannot parse', () => {
+      const s3Url = S3Url.fromUrl('invalid-url');
+      expect(s3Url).toMatchObject({
+        bucket: '',
+        isValid: false,
+        provider: null,
+      });
+    });
+  });
 });
 
 function itIsConvertedFine(srcUrl, resultUrl = srcUrl) {
