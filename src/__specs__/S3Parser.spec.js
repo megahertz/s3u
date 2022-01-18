@@ -58,6 +58,14 @@ describe('S3Parser', () => {
       expect(providers).toEqual([aws]);
     });
 
+    it('resolves ths stackpath provider if hostname matches', () => {
+      const providers = parser.getProvidersForParse({
+        url: 'https://test.s3.eu-west-2.stackpathstorage.com/file.txt',
+      });
+
+      expect(providers).toEqual([sp]);
+    });
+
     it('resolves the aws when s3 protocol is used', () => {
       const providers = parser.getProvidersForParse({
         url: 's3://test',

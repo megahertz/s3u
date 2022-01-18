@@ -4,21 +4,60 @@ const { describe, expect, it } = require('humile');
 const { S3Url } = require('../index');
 
 describe('integration test', () => {
-  describe('parse & buildUrl', () => {
-    itIsSimilarAfterParse('http://s3.amazonaws.com/');
-    itIsSimilarAfterParse('https://s3.amazonaws.com/');
-    itIsSimilarAfterParse('https://test.s3.amazonaws.com/');
-    itIsSimilarAfterParse('https://test.s3.us-est1.amazonaws.com/');
-    itIsSimilarAfterParse('https://test.s3.us-est1.amazonaws.com/dir1');
-    itIsSimilarAfterParse('https://s3.us-est1.amazonaws.com/test/dir1');
-    itIsSimilarAfterParse('https://s3.us-est1.amazonaws.com:8080/test/dir1');
-    itIsSimilarAfterParse('https://user:pass@s3.amazonaws.com:8080/test/dir1');
+  describe('Amazon AWS', () => {
+    describe('parse & buildUrl', () => {
+      itIsConvertedFine('http://s3.amazonaws.com/');
+      itIsConvertedFine('https://s3.amazonaws.com/');
+      itIsConvertedFine('https://test.s3.amazonaws.com/');
+      itIsConvertedFine('https://test.s3.us-est1.amazonaws.com/');
+      itIsConvertedFine('https://test.s3.us-est1.amazonaws.com/dir1');
+      itIsConvertedFine('https://s3.us-est1.amazonaws.com/test/dir1');
+      itIsConvertedFine('https://s3.us-est1.amazonaws.com:8080/test/dir1');
+      itIsConvertedFine('https://user:pass@s3.amazonaws.com:8080/test/dir1');
+      itIsConvertedFine('https://test.s3.amazonaws.com/New+folder%25/file.txt');
+      itIsConvertedFine(
+        'https://test.s3-us-est1.amazonaws.com/',
+        'https://test.s3.us-est1.amazonaws.com/'
+      );
+
+      it('converts s3: protocol to https', () => {
+        const s3Url = S3Url.fromUrl('s3://test/file.txt');
+        s3Url.protocol = 'https:';
+        expect(s3Url.href).toBe('https://test.s3.amazonaws.com/file.txt');
+      });
+    });
+  });
+
+  describe('Digital Ocean', () => {
+    itIsConvertedFine('http://digitaloceanspaces.com/');
+    itIsConvertedFine('https://fra1.digitaloceanspaces.com/');
+    itIsConvertedFine('https://test.fra1.digitaloceanspaces.com/');
+    itIsConvertedFine('https://test.fra1.digitaloceanspaces.com/');
+    itIsConvertedFine('https://fra1.digitaloceanspaces.com/test/file.txt');
+    itIsConvertedFine('https://test.fra1.digitaloceanspaces.com/file.txt');
+    itIsConvertedFine('https://fra1.digitaloceanspaces.com/test/file.txt');
+    itIsConvertedFine('https://test.fra1.digitaloceanspaces.com/file.txt');
+  });
+
+  describe('Stackpath', () => {
+    itIsConvertedFine('http://s3.stackpathstorage.com/');
+    itIsConvertedFine('https://s3.stackpathstorage.com/');
+    itIsConvertedFine('https://test.s3.stackpathstorage.com/');
+    itIsConvertedFine('https://test.s3.us-est1.stackpathstorage.com/');
+    itIsConvertedFine('https://s3.stackpathstorage.com/test/file.txt');
+    itIsConvertedFine('https://test.s3.stackpathstorage.com/file.txt');
+    itIsConvertedFine(
+      'https://s3.eu-west-2.stackpathstorage.com/test/file.txt'
+    );
+    itIsConvertedFine(
+      'https://test.s3.eu-west-2.stackpathstorage.com/file.txt'
+    );
   });
 });
 
-function itIsSimilarAfterParse(url) {
-  it(`is similar after parse: ${url}`, () => {
-    const s3Url = S3Url.fromUrl(url);
-    expect(s3Url.makeUrl()).toBe(url);
+function itIsConvertedFine(srcUrl, resultUrl = srcUrl) {
+  it(`is similar after parse: ${srcUrl}`, () => {
+    const s3Url = S3Url.fromUrl(srcUrl);
+    expect(s3Url.href).toBe(resultUrl);
   });
 }

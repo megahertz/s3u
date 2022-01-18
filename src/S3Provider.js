@@ -21,7 +21,6 @@ class S3Provider {
   buildHostName({ s3Url }) {
     return [
       s3Url.bucketPosition === 'hostname' && s3Url.bucket,
-      's3',
       s3Url.region,
       s3Url.domain || this.domain,
     ]
@@ -71,20 +70,30 @@ class S3Provider {
   parseBucket(hostname, s3Url) {
     const hostnameParts = hostname.split('.');
 
-    if (hostnameParts[1] === 's3' || hostnameParts[1]?.startsWith('s3-')) {
+    // like {bucket}.{region}.digitaloceanspaces.com
+    if (hostnameParts.length === 2) {
       s3Url.setBucket(hostnameParts[0]);
       s3Url.setBucketPosition('hostname');
       return hostnameParts.slice(1).join('.');
     }
 
+    return hostname;
+  }
+
+  parseBucketFromPathname(s3Url) {
     const [bucket, ...keyParts] = s3Url.key.split('/');
     s3Url.setBucket(bucket);
     s3Url.setBucketPosition('pathname');
     s3Url.setKey(keyParts.join('/'));
-    return hostname;
   }
 
   parseDomain(hostname, s3Url) {
+    if (s3Url.protocol === 's3:') {
+      s3Url.setDomain(this.domain || 'amazonaws.com');
+      s3Url.setBucket(hostname);
+      return '';
+    }
+
     if (this.domain && hostname.endsWith(this.domain)) {
       s3Url.setDomain(this.domain);
       return hostname.slice(0, -this.domain.length).replace(/\.$/, '');
@@ -99,14 +108,9 @@ class S3Provider {
   parseRegion(hostname, s3Url) {
     const hostnameParts = hostname.split('.');
 
-    if (hostnameParts[0]?.startsWith('s3-')) {
-      s3Url.setRegion(hostnameParts[0].slice(3));
-      return hostnameParts.slice(1).join('.');
-    }
-
-    if (hostnameParts[0] === 's3' && hostnameParts[1]) {
-      s3Url.setRegion(hostnameParts[1]);
-      return hostnameParts.slice(2).join('.');
+    if (hostnameParts.length > 0) {
+      s3Url.setRegion(hostnameParts.shift());
+      return hostnameParts.join('.');
     }
 
     return hostname;
@@ -129,6 +133,10 @@ class S3Provider {
     let hostString = this.parseDomain(urlObj.hostname, s3Url);
     hostString = this.parseBucket(hostString, s3Url);
     this.parseRegion(hostString, s3Url);
+
+    if (!s3Url.bucket) {
+      this.parseBucketFromPathname(s3Url);
+    }
 
     s3Url.setKey(decodeS3Key(s3Url.key));
 

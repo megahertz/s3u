@@ -14,6 +14,10 @@ export class S3Url {
   sourceUrl: string;
   username: string;
 
+  readonly href: string;
+
+  constructor(attrs: Partial<S3Url> | string);
+
   static fromUrl(url: string): S3Url;
 
   clone(newAttrs?: Partial<S3Url>): S3Url;
@@ -44,17 +48,20 @@ export class S3Provider implements ProviderInterface {
     title: string
   });
 
-  buildHostName({ s3Url }: { s3Url: S3Url }): string;
-  buildPathName({ s3Url }: { s3Url: S3Url }): string;
   buildUrl({ s3Url }: { s3Url: S3Url }): string;
   getEndpoint({ region }?: { region: string }): string;
   matchHostName(hostName: string): boolean;
-  parseBucket(hostname: string, s3Url: S3Url): string;
-  parseDomain(hostname: string, s3Url: S3Url): string;
-  parseRegion(hostname: string, s3Url: S3Url): string;
-
   parseUrl({ url }: { url: string }): S3Url;
+
+  protected buildHostName({ s3Url }: { s3Url: S3Url }): string;
+  protected buildPathName({ s3Url }: { s3Url: S3Url }): string;
+  protected parseBucket(hostname: string, s3Url: S3Url): string;
+  protected parseBucketFromPathname(hostname: string, s3Url: S3Url): string;
+  protected parseDomain(hostname: string, s3Url: S3Url): string;
+  protected parseRegion(hostname: string, s3Url: S3Url): string;
 }
+
+export class AmazonAwsProvider extends S3Provider {}
 
 export class S3Parser {
   providers: S3Provider[];
@@ -72,7 +79,6 @@ export class S3Parser {
     url: string,
     providerId?: string
   }): S3Provider[];
-
   parseUrl(options: {
     url: string,
     providerId?: string
