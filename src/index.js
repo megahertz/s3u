@@ -7,7 +7,7 @@ const S3Url = require('./S3Url');
 const s3KeyUtils = require('./utils/s3key');
 
 const s3Parser = new S3Parser({
-  fallbackProvider: new S3Provider({ title: 'Generic' }),
+  fallbackProvider: new S3Provider({ id: 'generic', title: 'Generic' }),
 
   providers: [
     new AmazonAwsProvider(),

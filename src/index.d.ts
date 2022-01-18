@@ -19,7 +19,7 @@ export class S3Url {
 
   constructor(attrs: Partial<S3Url> | string);
 
-  static fromUrl(url: string): S3Url;
+  static fromUrl(attrs: { url: string, providerId?: string }): S3Url;
 
   clone(newAttrs?: Partial<S3Url>): S3Url;
 

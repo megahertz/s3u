@@ -21,7 +21,7 @@ describe('integration test', () => {
       );
 
       it('converts s3: protocol to https', () => {
-        const s3Url = S3Url.fromUrl('s3://test/file.txt');
+        const s3Url = new S3Url('s3://test/file.txt');
         s3Url.protocol = 'https:';
         expect(s3Url.href).toBe('https://test.s3.amazonaws.com/file.txt');
       });
@@ -65,7 +65,7 @@ describe('integration test', () => {
     itIsConvertedFine('https://test.fra1.example.com/file.txt');
 
     it('return invalid url when cannot parse', () => {
-      const s3Url = S3Url.fromUrl('invalid-url');
+      const s3Url = new S3Url('invalid-url');
       expect(s3Url).toMatchObject({
         bucket: '',
         isValid: false,
@@ -77,7 +77,7 @@ describe('integration test', () => {
 
 function itIsConvertedFine(srcUrl, resultUrl = srcUrl) {
   it(`is similar after parse: ${srcUrl}`, () => {
-    const s3Url = S3Url.fromUrl(srcUrl);
+    const s3Url = new S3Url(srcUrl);
     expect(s3Url.href).toBe(resultUrl);
   });
 }

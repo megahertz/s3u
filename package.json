@@ -1,7 +1,7 @@
 {
   "name": "s3u",
   "version": "0.1.0",
-  "description": "S3 URL manipulation helper",
+  "description": "S3 URL manipulation helper similar to standard URL class",
   "main": "src/index.js",
   "scripts": {
     "lint": "eslint 'src/**/*.js'",

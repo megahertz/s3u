@@ -24,18 +24,18 @@ class S3Url {
   constructor(attrs = {}) {
     if (typeof attrs === 'string') {
       // eslint-disable-next-line no-constructor-return
-      return this.constructor.fromUrl(attrs);
+      return this.constructor.fromUrl({ url: attrs });
     }
 
     Object.assign(this, attrs);
   }
 
-  static fromUrl(url) {
+  static fromUrl({ url, providerId = '' }) {
     if (!this.parser) {
       throw new Error('S3Url.parser is not set');
     }
 
-    return this.parser.parseUrl({ url });
+    return this.parser.parseUrl({ url, providerId });
   }
 
   static setParser(parser) {
@@ -55,7 +55,7 @@ class S3Url {
   }
 
   clone(newAttrs = {}) {
-    return new S3Url({ ...this, newAttrs });
+    return new S3Url({ ...this, ...newAttrs });
   }
 
   setBucket(bucket) {

@@ -100,6 +100,11 @@ class S3Provider {
     }
 
     const hostnameParts = hostname.split('.');
+
+    if (hostnameParts.length < 2) {
+      throw new Error(`Cannot parse domain name from the host '${hostname}'`);
+    }
+
     const genericSecondLevelDomain = hostnameParts.slice(-2).join('.');
     s3Url.setDomain(genericSecondLevelDomain);
     return hostnameParts.slice(0, -2).join('.');
