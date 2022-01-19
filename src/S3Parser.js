@@ -3,12 +3,11 @@
 const S3Url = require('./S3Url');
 
 class S3Parser {
-  providers = [];
-  fallbackProvider = null;
-
   constructor({ providers = [], fallbackProvider = null } = {}) {
-    providers.forEach((provider) => this.addProvider(provider));
+    this.providers = [];
     this.fallbackProvider = fallbackProvider;
+
+    providers.forEach((provider) => this.addProvider(provider));
   }
 
   addProvider(provider) {

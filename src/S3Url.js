@@ -1,27 +1,25 @@
 'use strict';
 
 class S3Url {
-  static parser;
-
-  bucket = '';
-  bucketPosition = 'hostname';
-  domain = '';
-  error = null;
-  hash = '';
-  key = '';
-  password = '';
-  port = '';
-  protocol = 'https:';
-  provider = null;
-  region = '';
-  search = '';
-  sourceUrl = '';
-  username = '';
-
   /**
    * @param {Partial<S3Url>} attrs
    */
   constructor(attrs = {}) {
+    this.bucket = '';
+    this.bucketPosition = 'hostname';
+    this.domain = '';
+    this.error = null;
+    this.hash = '';
+    this.key = '';
+    this.password = '';
+    this.port = '';
+    this.protocol = 'https:';
+    this.provider = null;
+    this.region = '';
+    this.search = '';
+    this.sourceUrl = '';
+    this.username = '';
+
     if (typeof attrs === 'string') {
       // eslint-disable-next-line no-constructor-return
       return this.constructor.fromUrl({ url: attrs });
