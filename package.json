@@ -13,8 +13,8 @@
   },
   "repository": "megahertz/s3u",
   "files": [
-    "src/*",
-    "!__specs__"
+    "!**/__specs__",
+    "src"
   ],
   "keywords": [
     "s3",
