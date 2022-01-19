@@ -1,6 +1,6 @@
 {
   "name": "s3u",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "S3 URL manipulation helper similar to standard URL class",
   "main": "src/index.js",
   "scripts": {
