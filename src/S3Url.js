@@ -26,6 +26,8 @@ class S3Url {
     }
 
     Object.assign(this, attrs);
+
+    this.updateBucketPosition();
   }
 
   static fromUrl({ url, providerId = '' }) {
