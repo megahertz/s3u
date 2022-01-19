@@ -77,6 +77,11 @@ class S3Provider {
 
   parseBucketFromPathname(s3Url) {
     const [bucket, ...keyParts] = s3Url.key.split('/');
+
+    if (!bucket) {
+      return;
+    }
+
     s3Url.setBucket(bucket);
     s3Url.setBucketPosition('pathname');
     s3Url.setKey(keyParts.join('/'));

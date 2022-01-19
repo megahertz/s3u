@@ -58,10 +58,12 @@ class S3Url {
 
   setBucket(bucket) {
     this.bucket = bucket;
+    this.updateBucketPosition();
   }
 
   setBucketPosition(position) {
     this.bucketPosition = position;
+    this.updateBucketPosition();
   }
 
   setDomain(domain) {
@@ -78,6 +80,17 @@ class S3Url {
 
   toString() {
     return this.makeUrl();
+  }
+
+  updateBucketPosition() {
+    if (!this.bucket) {
+      return;
+    }
+
+    // If a bucket contains dot, only pathname could be used.
+    if (this.bucket.includes('.')) {
+      this.bucketPosition = 'pathname';
+    }
   }
 }
 

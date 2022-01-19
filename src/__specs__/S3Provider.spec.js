@@ -17,7 +17,7 @@ describe('S3Provider', () => {
     it('domain root with region', () => {
       expectParsed('https://test.example.com/', {
         bucket: '',
-        bucketPosition: 'pathname',
+        bucketPosition: 'hostname',
         key: '',
         region: 'test',
       });
