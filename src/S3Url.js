@@ -7,6 +7,7 @@ class S3Url {
   constructor(attrs = {}) {
     this.bucket = '';
     this.bucketPosition = 'hostname';
+    this.cdn = false;
     this.domain = '';
     this.error = null;
     this.hash = '';
@@ -66,6 +67,10 @@ class S3Url {
   setBucketPosition(position) {
     this.bucketPosition = position;
     this.updateBucketPosition();
+  }
+
+  setCdn(cdn) {
+    this.cdn = cdn;
   }
 
   setDomain(domain) {

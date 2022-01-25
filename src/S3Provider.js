@@ -8,7 +8,7 @@ const { decodeS3Key, encodeS3Key } = require('./utils/s3key');
 class S3Provider {
   constructor({ id, domain, endpoint, title } = {}) {
     this.domain = domain;
-    this.endpoint = endpoint || (domain && `https://s3.{region}.${domain}`);
+    this.endpoint = endpoint || (domain && `https://{region}.${domain}`);
     this.id = id || domain;
     this.title = title;
   }
@@ -66,10 +66,10 @@ class S3Provider {
     const hostnameParts = hostname.split('.');
 
     // like {bucket}.{region}.digitaloceanspaces.com
-    if (hostnameParts.length === 2) {
-      s3Url.setBucket(hostnameParts[0]);
+    if (hostnameParts.length >= 2) {
+      s3Url.setBucket(hostnameParts.slice(0, -1).join('.'));
       s3Url.setBucketPosition('hostname');
-      return hostnameParts.slice(1).join('.');
+      return hostnameParts.slice(-1).join('.');
     }
 
     return hostname;

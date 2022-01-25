@@ -1,6 +1,7 @@
 export class S3Url {
   bucket: string;
   bucketPosition: 'hostname' | 'pathname';
+  cdn: boolean;
   domain: string;
   error?: Error;
   hash: string;
@@ -25,6 +26,7 @@ export class S3Url {
 
   setBucket(bucket: string): void;
   setBucketPosition(position: 'hostname' | 'pathname'): void;
+  setCdn(cdn: boolean): void;
   setDomain(domain: string): void;
   setKey(key: string): void;
   setRegion(region: string): void;

@@ -38,6 +38,7 @@ console.log(s3Url);
 S3Url {
   bucket: 'mybucket',
   bucketPosition: 'hostname',
+  cdn: false,
   domain: 'amazonaws.com',
   error: null,
   hash: '',

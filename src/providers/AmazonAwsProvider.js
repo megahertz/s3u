@@ -10,12 +10,13 @@ class AmazonAwsProvider extends S3Provider {
     title,
   } = { domain: 'amazonaws.com', title: 'Amazon S3' }) {
     super({ id, domain, endpoint, title });
+    this.endpoint = endpoint || (domain && `https://s3.{region}.${domain}`);
   }
 
   buildHostName({ s3Url }) {
     return [
       s3Url.bucketPosition === 'hostname' && s3Url.bucket,
-      's3',
+      s3Url.cdn ? 's3-accelerate' : 's3',
       s3Url.region,
       s3Url.domain || this.domain,
     ]
@@ -25,6 +26,14 @@ class AmazonAwsProvider extends S3Provider {
 
   parseBucket(hostname, s3Url) {
     const hostnameParts = hostname.split('.');
+
+    if (hostnameParts.slice(-1)[0] === 's3-accelerate') {
+      s3Url.setCdn(true);
+      s3Url.setRegion('');
+      s3Url.setBucket(hostnameParts.slice(-2)[0]);
+      s3Url.setBucketPosition('hostname');
+      return '';
+    }
 
     // eslint-disable-next-line arrow-body-style
     const s3Pos = hostnameParts.findIndex((p) => {
