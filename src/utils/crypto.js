@@ -2,16 +2,16 @@
 
 const crypto = require('crypto');
 
-module.exports = { bufferToHex, hash, hmac };
+module.exports = { bufferToHex, hmacSha256, sha256 };
 
-async function hmac(message, secret) {
+async function hmacSha256(message, secret) {
   return crypto
     .createHmac('sha256', secret)
     .update(message, 'utf8')
     .digest();
 }
 
-async function hash(message) {
+async function sha256(message) {
   return crypto
     .createHash('sha256')
     .update(message, 'utf8')

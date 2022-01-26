@@ -2,11 +2,11 @@
 
 /* eslint-env browser */
 
-module.exports = { bufferToHex, hash, hmac };
+module.exports = { bufferToHex, hmacSha256, sha256 };
 
 const encoder = new TextEncoder();
 
-async function hmac(message, secret) {
+async function hmacSha256(message, secret) {
   const cryptoKey = await window.crypto.subtle.importKey(
     'raw',
     toBuffer(secret),
@@ -17,7 +17,7 @@ async function hmac(message, secret) {
   return window.crypto.subtle.sign('HMAC', cryptoKey, toBuffer(message));
 }
 
-async function hash(message) {
+async function sha256(message) {
   return window.crypto.subtle.digest('SHA-256', toBuffer(message));
 }
 

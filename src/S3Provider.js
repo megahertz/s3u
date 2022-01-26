@@ -4,7 +4,7 @@
 
 const S3Url = require('./S3Url');
 const { decodeS3Key, encodeS3Key } = require('./utils/s3key');
-const { bufferToHex, hash, hmac } = require('./utils/crypto');
+const { bufferToHex, hmacSha256, sha256 } = require('./utils/crypto');
 
 class S3Provider {
   constructor({ id, domain, endpoint, title } = {}) {
@@ -63,11 +63,11 @@ class S3Provider {
       'UNSIGNED-PAYLOAD',
     ].join('\n');
 
-    const signString = [algo, time, scope, await hash(request)].join('\n');
+    const signString = [algo, time, scope, await sha256(request)].join('\n');
 
     const signPromise = [date, s3Url.region, 's3', 'aws4_request', signString]
       .reduce(
-        (promise, data) => promise.then((prev) => hmac(data, prev)),
+        (promise, data) => promise.then((prev) => hmacSha256(data, prev)),
         Promise.resolve('AWS4' + secretAccessKey)
       );
 
