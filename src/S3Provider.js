@@ -4,6 +4,7 @@
 
 const S3Url = require('./S3Url');
 const { decodeS3Key, encodeS3Key } = require('./utils/s3key');
+const { bufferToHex, hash, hmac } = require('./utils/crypto');
 
 class S3Provider {
   constructor({ id, domain, endpoint, title } = {}) {
@@ -30,6 +31,49 @@ class S3Provider {
     ]
       .filter(Boolean)
       .join('/');
+  }
+
+  async buildSignedUrl({
+    accessKeyId = getEnv('AWS_ACCESS_KEY_ID'),
+    secretAccessKey = getEnv('AWS_SECRET_ACCESS_KEY'),
+    expires = 60 * 60 * 24 * 7,
+    method = 'GET',
+    s3Url,
+  }) {
+    const algo = 'AWS4-HMAC-SHA256';
+    const url = new URL(this.buildUrl({ s3Url }));
+    const time = new Date().toISOString().slice(0, 19).replace(/\W/g, '') + 'Z';
+    const date = time.slice(0, 8);
+    const scope = `${date}/${s3Url.region}/s3/aws4_request`;
+
+    url.searchParams.set('X-Amz-Algorithm', algo);
+    url.searchParams.set('X-Amz-Credential', `${accessKeyId}/${scope}`);
+    url.searchParams.set('X-Amz-Date', time);
+    url.searchParams.set('X-Amz-Expires', expires.toString(10));
+    url.searchParams.set('X-Amz-SignedHeaders', 'host');
+    url.searchParams.sort();
+
+    const request = [
+      method.toUpperCase(),
+      url.pathname,
+      url.search.slice(1),
+      `host:${url.host}`,
+      '',
+      'host',
+      'UNSIGNED-PAYLOAD',
+    ].join('\n');
+
+    const signString = [algo, time, scope, await hash(request)].join('\n');
+
+    const signPromise = [date, s3Url.region, 's3', 'aws4_request', signString]
+      .reduce(
+        (promise, data) => promise.then((prev) => hmac(data, prev)),
+        Promise.resolve('AWS4' + secretAccessKey)
+      );
+
+    url.searchParams.set('X-Amz-Signature', bufferToHex(await signPromise));
+
+    return url.href;
   }
 
   buildUrl({ s3Url }) {
@@ -147,6 +191,14 @@ class S3Provider {
 
     return s3Url;
   }
+}
+
+function getEnv(name) {
+  if (typeof process !== 'undefined' && process.env) {
+    return process.env[name];
+  }
+
+  return undefined;
 }
 
 module.exports = S3Provider;

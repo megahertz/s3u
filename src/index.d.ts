@@ -30,6 +30,13 @@ export class S3Url {
   setDomain(domain: string): void;
   setKey(key: string): void;
   setRegion(region: string): void;
+
+  sign(opts?: {
+    accessKeyId?: string,
+    expires?: number,
+    method?: string,
+    secretAccessKey?: string,
+  }): Promise<string>
 }
 
 export interface ProviderInterface {

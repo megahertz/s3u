@@ -3,6 +3,9 @@
   "version": "0.2.4",
   "description": "S3 URL manipulation helper similar to standard URL class",
   "main": "src/index.js",
+  "browser": {
+    "./src/utils/crypto.js": "./src/utils/crypto.browser.js"
+  },
   "scripts": {
     "lint": "eslint 'src/**/*.js'",
     "test": "humile",

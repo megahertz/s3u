@@ -55,6 +55,25 @@ class S3Url {
     return Boolean(this.provider && typeof this.provider === 'object');
   }
 
+  async sign({
+    accessKeyId,
+    expires,
+    method,
+    secretAccessKey,
+  } = {}) {
+    if (!this.provider) {
+      throw new Error('Cannot sign url from invalid S3Url');
+    }
+
+    return this.provider.buildSignedUrl({
+      accessKeyId,
+      expires,
+      method,
+      s3Url: this,
+      secretAccessKey,
+    });
+  }
+
   clone(newAttrs = {}) {
     return new S3Url({ ...this, ...newAttrs });
   }
