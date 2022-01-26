@@ -90,22 +90,26 @@ class S3Url {
 
   setCdn(cdn) {
     this.cdn = cdn;
+    return this;
   }
 
   setDomain(domain) {
     this.domain = domain;
+    return this;
   }
 
   setKey(key) {
     this.key = key;
+    return this;
   }
 
   setRegion(region) {
     this.region = region;
+    return this;
   }
 
   toString() {
-    return this.makeUrl();
+    return this.href;
   }
 
   updateBucketPosition() {
