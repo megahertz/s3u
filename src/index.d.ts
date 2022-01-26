@@ -24,12 +24,12 @@ export class S3Url {
 
   clone(newAttrs?: Partial<S3Url>): S3Url;
 
-  setBucket(bucket: string): void;
-  setBucketPosition(position: 'hostname' | 'pathname'): void;
-  setCdn(cdn: boolean): void;
-  setDomain(domain: string): void;
-  setKey(key: string): void;
-  setRegion(region: string): void;
+  setBucket(bucket: string): this;
+  setBucketPosition(position: 'hostname' | 'pathname'): this;
+  setCdn(cdn: boolean): this;
+  setDomain(domain: string): this;
+  setKey(key: string): this;
+  setRegion(region: string): this;
 
   sign(opts?: {
     accessKeyId?: string,

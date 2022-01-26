@@ -23,6 +23,31 @@ class DigitalOceanSpacesProvider extends S3Provider {
       .join('.');
   }
 
+  async buildSignedUrl({
+    accessKeyId,
+    secretAccessKey,
+    expires,
+    method,
+    s3Url,
+  }) {
+    const signedUrl = await super.buildSignedUrl({
+      accessKeyId,
+      secretAccessKey,
+      expires,
+      method,
+      // DO uses the same signature for CDN and normal endpoints
+      s3Url: s3Url.clone({ cdn: false }),
+    });
+
+    if (s3Url.cdn) {
+      return this.parseUrl({ url: signedUrl })
+        .setCdn(true)
+        .href;
+    }
+
+    return signedUrl;
+  }
+
   parseBucket(hostname, s3Url) {
     const hostnameParts = hostname.split('.');
 
