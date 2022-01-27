@@ -18,7 +18,9 @@ async function hmacSha256(message, secret) {
 }
 
 async function sha256(message) {
-  return window.crypto.subtle.digest('SHA-256', toBuffer(message));
+  return bufferToHex(
+    await window.crypto.subtle.digest('SHA-256', toBuffer(message))
+  );
 }
 
 function bufferToHex(buffer) {
