@@ -8,7 +8,7 @@ const DigitalOceanSpacesProvider =
 const S3Parser = require('./S3Parser');
 const S3Provider = require('./S3Provider');
 const S3Url = require('./S3Url');
-const s3KeyUtils = require('./utils/s3key');
+const encode = require('./utils/encode');
 
 const s3Parser = new S3Parser({
   fallbackProvider: new S3Provider({ id: 'generic', title: 'Generic' }),
@@ -35,5 +35,5 @@ module.exports = {
   S3Parser,
   s3Parser,
   S3Provider,
-  ...s3KeyUtils,
+  ...encode,
 };

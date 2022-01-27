@@ -3,7 +3,11 @@
 /* eslint-disable no-unused-vars */
 
 const S3Url = require('./S3Url');
-const { decodeS3Key, encodeS3Key } = require('./utils/s3key');
+const {
+  decodeS3Key,
+  encodeS3Key,
+  encodeSpecialUrlChars,
+} = require('./utils/encode');
 const { bufferToHex, hmacSha256, sha256 } = require('./utils/crypto');
 
 class S3Provider {
@@ -53,12 +57,8 @@ class S3Provider {
     url.searchParams.set('X-Amz-SignedHeaders', 'host');
     url.searchParams.sort();
 
-    url.pathname = url.pathname
-      .replace(/\+/g, '%20')
-      // eslint-disable-next-line arrow-body-style
-      .replace(/[!'()*]/g, (c) => {
-        return '%' + c.charCodeAt(0).toString(16).toUpperCase();
-      });
+    url.search = encodeSpecialUrlChars(url.search);
+    url.pathname = encodeSpecialUrlChars(url.pathname);
 
     const request = [
       method.toUpperCase(),
@@ -78,9 +78,7 @@ class S3Provider {
         Promise.resolve('AWS4' + secretAccessKey)
       );
 
-    url.searchParams.set('X-Amz-Signature', bufferToHex(await signPromise));
-
-    return url.href;
+    return `${url.href}&X-Amz-Signature=${bufferToHex(await signPromise)}`;
   }
 
   buildUrl({ s3Url }) {

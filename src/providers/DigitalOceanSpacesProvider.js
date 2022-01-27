@@ -40,9 +40,7 @@ class DigitalOceanSpacesProvider extends S3Provider {
     });
 
     if (s3Url.cdn) {
-      return this.parseUrl({ url: signedUrl })
-        .setCdn(true)
-        .href;
+      return signedUrl.replace(`.${this.domain}/`, `.cdn.${this.domain}/`);
     }
 
     return signedUrl;
