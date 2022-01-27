@@ -12,6 +12,7 @@ S3 URL manipulation helper similar to standard URL class
  - Simple and lightweight
  - No dependencies
  - Typescript support
+ - Built-in presigned URL generation
 
 ## Installation
 
@@ -61,6 +62,10 @@ S3Url {
 
 // Making a http copy
 const httpUrl = s3Url.clone({ protocol: 'http:' }).href;
+
+// Generaing presigned URL, AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+// env vars can be used instead of passing arguments
+const presignedUrl = s3Url.sign({ accessKeyId, secretAccessKey });
 ```
 
 ## Providers

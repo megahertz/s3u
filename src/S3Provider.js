@@ -53,6 +53,13 @@ class S3Provider {
     url.searchParams.set('X-Amz-SignedHeaders', 'host');
     url.searchParams.sort();
 
+    url.pathname = url.pathname
+      .replace(/\+/g, '%20')
+      // eslint-disable-next-line arrow-body-style
+      .replace(/[!'()*]/g, (c) => {
+        return '%' + c.charCodeAt(0).toString(16).toUpperCase();
+      });
+
     const request = [
       method.toUpperCase(),
       url.pathname,

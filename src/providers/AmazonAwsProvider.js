@@ -24,6 +24,32 @@ class AmazonAwsProvider extends S3Provider {
       .join('.');
   }
 
+  async buildSignedUrl({
+    accessKeyId,
+    secretAccessKey,
+    expires,
+    method,
+    s3Url,
+  }) {
+    const s3UrlCopy = s3Url.clone();
+
+    if (!s3UrlCopy.region) {
+      s3UrlCopy.setRegion('us-east-1');
+    }
+
+    if (s3UrlCopy.protocol === 's3:') {
+      s3UrlCopy.setProtocol('https:');
+    }
+
+    return super.buildSignedUrl({
+      accessKeyId,
+      secretAccessKey,
+      expires,
+      method,
+      s3Url: s3UrlCopy,
+    });
+  }
+
   parseBucket(hostname, s3Url) {
     const hostnameParts = hostname.split('.');
 

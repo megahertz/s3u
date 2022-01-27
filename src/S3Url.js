@@ -103,6 +103,11 @@ class S3Url {
     return this;
   }
 
+  setProtocol(protocol) {
+    this.protocol = protocol;
+    return this;
+  }
+
   setRegion(region) {
     this.region = region;
     return this;

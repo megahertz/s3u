@@ -29,6 +29,7 @@ export class S3Url {
   setCdn(cdn: boolean): this;
   setDomain(domain: string): this;
   setKey(key: string): this;
+  setProtocol(protocol: string): this;
   setRegion(region: string): this;
 
   sign(opts?: {
