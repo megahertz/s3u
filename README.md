@@ -9,6 +9,7 @@ S3 URL manipulation helper similar to standard URL class
 ### Key features
 
  - Support different S3 providers
+ - Support both Node.js and browser environment
  - Simple and lightweight
  - No dependencies
  - Typescript support
