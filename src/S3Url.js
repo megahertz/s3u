@@ -43,6 +43,14 @@ class S3Url {
     this.parser = parser;
   }
 
+  get dirPath() {
+    return this.key.split('/').slice(0, -1).join('/');
+  }
+
+  get fileName() {
+    return this.key.split('/').pop();
+  }
+
   get href() {
     if (!this.provider) {
       throw new Error('Cannot make url from invalid S3Url');
@@ -93,13 +101,24 @@ class S3Url {
     return this;
   }
 
+  setDirPath(dirPath) {
+    this.setKey(`${dirPath}/${this.fileName}`);
+    return this;
+  }
+
   setDomain(domain) {
     this.domain = domain;
     return this;
   }
 
+  setFileName(fileName) {
+    this.setKey(`${this.dirPath}/${fileName}`);
+    return this;
+  }
+
   setKey(key) {
     this.key = key;
+    this.trimSlashes({ begin: true });
     return this;
   }
 
@@ -110,6 +129,22 @@ class S3Url {
 
   setRegion(region) {
     this.region = region;
+    return this;
+  }
+
+  trimSlashes({ begin = false, end = false } = {}) {
+    let key = this.key;
+
+    if (begin) {
+      key = key.replace(/^\/+/, '');
+    }
+
+    if (end) {
+      key = key.replace(/\/+$/, '');
+    }
+
+    this.key = key;
+
     return this;
   }
 

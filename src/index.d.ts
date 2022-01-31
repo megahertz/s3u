@@ -15,6 +15,8 @@ export class S3Url {
   sourceUrl: string;
   username: string;
 
+  readonly dirPath: string;
+  readonly fileName: string;
   readonly href: string;
   readonly isValid: string;
 
@@ -27,7 +29,9 @@ export class S3Url {
   setBucket(bucket: string): this;
   setBucketPosition(position: 'hostname' | 'pathname'): this;
   setCdn(cdn: boolean): this;
+  setDirPath(dirPath: string): this;
   setDomain(domain: string): this;
+  setFileName(fileName: string): this;
   setKey(key: string): this;
   setProtocol(protocol: string): this;
   setRegion(region: string): this;
@@ -38,7 +42,10 @@ export class S3Url {
     method?: string,
     secretAccessKey?: string,
   }): Promise<string>
+
+  trimSlashes(options?: { begin?: boolean; end?: boolean }): this;
 }
+
 
 export interface ProviderInterface {
   buildUrl({ s3Url }: { s3Url: S3Url }): string;

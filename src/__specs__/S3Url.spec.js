@@ -27,4 +27,144 @@ describe('S3Url', () => {
       );
     });
   });
+
+  describe('fileName', () => {
+    it('returns empty string if a key is empty', () => {
+      const s3Url = new S3Url('https://bucket.s3.amazonaws.com/');
+      expect(s3Url.fileName).toBe('');
+    });
+
+    it('returns dirname', () => {
+      const s3Url = new S3Url('https://bucket.s3.amazonaws.com/test');
+      expect(s3Url.fileName).toBe('test');
+    });
+
+    it('returns actual file name', () => {
+      const s3Url = new S3Url('https://bucket.s3.amazonaws.com/test/file.zip');
+      expect(s3Url.fileName).toBe('file.zip');
+    });
+  });
+
+  describe('fileName', () => {
+    it('returns empty string if a key is empty', () => {
+      const s3Url = new S3Url('https://bucket.s3.amazonaws.com/');
+      expect(s3Url.fileName).toBe('');
+    });
+
+    it('returns empty string if end slash', () => {
+      const s3Url = new S3Url('https://bucket.s3.amazonaws.com/test/');
+      expect(s3Url.fileName).toBe('');
+    });
+
+    it('returns dirname', () => {
+      const s3Url = new S3Url('https://bucket.s3.amazonaws.com/test');
+      expect(s3Url.fileName).toBe('test');
+    });
+
+    it('returns actual file name', () => {
+      const s3Url = new S3Url('https://bucket.s3.amazonaws.com/test/file.zip');
+      expect(s3Url.fileName).toBe('file.zip');
+    });
+
+    it('sets empty filename when it\'s already empty', () => {
+      const s3Url = new S3Url('https://bucket.s3.amazonaws.com/');
+
+      s3Url.setFileName('');
+
+      expect(s3Url.key).toBe('');
+    });
+
+    it('sets new filename when it\'s already empty', () => {
+      const s3Url = new S3Url('https://bucket.s3.amazonaws.com/');
+
+      s3Url.setFileName('file.zip');
+
+      expect(s3Url.key).toBe('file.zip');
+    });
+
+    it('sets empty filename when it was previously set', () => {
+      const s3Url = new S3Url('https://bucket.s3.amazonaws.com/dir/file.zip');
+
+      s3Url.setFileName('');
+
+      expect(s3Url.key).toBe('dir/');
+    });
+
+    it('sets new filename when it was previously set', () => {
+      const s3Url = new S3Url('https://bucket.s3.amazonaws.com/dir/file.zip');
+
+      s3Url.setFileName('newfile.zip');
+
+      expect(s3Url.key).toBe('dir/newfile.zip');
+    });
+  });
+
+  describe('dirPath', () => {
+    it('returns empty string if a key is empty', () => {
+      const s3Url = new S3Url('https://bucket.s3.amazonaws.com/');
+      expect(s3Url.dirPath).toBe('');
+    });
+
+    it('returns empty string if in the root', () => {
+      const s3Url = new S3Url('https://bucket.s3.amazonaws.com/test');
+      expect(s3Url.dirPath).toBe('');
+    });
+
+    it('returns actual dir path', () => {
+      const s3Url = new S3Url('https://bucket.s3.amazonaws.com/test/file.zip');
+      expect(s3Url.dirPath).toBe('test');
+    });
+
+    it('sets empty dir path when it\'s already empty', () => {
+      const s3Url = new S3Url('https://bucket.s3.amazonaws.com/');
+
+      s3Url.setDirPath('');
+
+      expect(s3Url.key).toBe('');
+    });
+
+    it('sets new dir path when it\'s already empty', () => {
+      const s3Url = new S3Url('https://bucket.s3.amazonaws.com/');
+
+      s3Url.setDirPath('dir');
+
+      expect(s3Url.key).toBe('dir/');
+    });
+
+    it('sets empty dir path when it was previously set', () => {
+      const s3Url = new S3Url('https://bucket.s3.amazonaws.com/dir/file.zip');
+
+      s3Url.setDirPath('');
+
+      expect(s3Url.key).toBe('file.zip');
+    });
+
+    it('sets new dir path when it was previously set', () => {
+      const s3Url = new S3Url('https://bucket.s3.amazonaws.com/dir/file.zip');
+
+      s3Url.setDirPath('newdir');
+
+      expect(s3Url.key).toBe('newdir/file.zip');
+    });
+  });
+
+  describe('trimSlashes', () => {
+    it('trims end slash', () => {
+      const s3Url = new S3Url('https://bucket.s3.amazonaws.com/dir/file.zip/');
+      expect(s3Url.key).toBe('dir/file.zip/');
+
+      s3Url.trimSlashes({ end: true });
+
+      expect(s3Url.key).toBe('dir/file.zip');
+    });
+
+    it('trims begin slash', () => {
+      const s3Url = new S3Url('https://bucket.s3.amazonaws.com/');
+      s3Url.key = '/dir/file.zip';
+
+      s3Url.trimSlashes({ begin: true });
+
+      expect(s3Url.key).toBe('dir/file.zip');
+    });
+  });
 });
