@@ -20,12 +20,19 @@
     "src"
   ],
   "keywords": [
-    "s3",
-    "aws",
-    "url",
+     "aws",
+    "amazon",
+    "digitalocean",
+    "digitalocean-spaces",
     "link",
+    "parse",
+    "presigned",
+    "s3",
+    "sign",
+    "spaces",
     "stackpath",
-    "spaces"
+    "storage",
+    "url"
   ],
   "author": "Alexey Prokhorov",
   "license": "MIT",
