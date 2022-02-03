@@ -34,6 +34,7 @@ export class S3Url {
   setFileName(fileName: string): this;
   setKey(key: string): this;
   setProtocol(protocol: string): this;
+  setProvider(provider: S3Provider | string): this;
   setRegion(region: string): this;
 
   sign(opts?: {

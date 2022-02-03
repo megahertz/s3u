@@ -2,9 +2,9 @@
 
 class S3Url {
   /**
-   * @param {Partial<S3Url>} attrs
+   * @param {Partial<S3Url> | string} options
    */
-  constructor(attrs = {}) {
+  constructor(options = {}) {
     this.bucket = '';
     this.bucketPosition = 'hostname';
     this.cdn = false;
@@ -21,12 +21,19 @@ class S3Url {
     this.sourceUrl = '';
     this.username = '';
 
-    if (typeof attrs === 'string') {
+    if (typeof options === 'string') {
       // eslint-disable-next-line no-constructor-return
-      return this.constructor.fromUrl({ url: attrs });
+      return this.constructor.fromUrl({ url: options });
     }
 
+    const { dirPath, fileName, provider, ...attrs } = options;
     Object.assign(this, attrs);
+
+    if (!(options instanceof S3Url)) {
+      dirPath && this.setFileName(dirPath);
+      fileName && this.setFileName(fileName);
+      provider && this.setProvider(provider);
+    }
 
     this.updateBucketPosition();
   }
@@ -61,25 +68,6 @@ class S3Url {
 
   get isValid() {
     return Boolean(this.provider && typeof this.provider === 'object');
-  }
-
-  async sign({
-    accessKeyId,
-    expires,
-    method,
-    secretAccessKey,
-  } = {}) {
-    if (!this.provider) {
-      throw new Error('Cannot sign url from invalid S3Url');
-    }
-
-    return this.provider.buildSignedUrl({
-      accessKeyId,
-      expires,
-      method,
-      s3Url: this,
-      secretAccessKey,
-    });
   }
 
   clone(newAttrs = {}) {
@@ -127,9 +115,42 @@ class S3Url {
     return this;
   }
 
+  setProvider(provider) {
+    if (provider && provider.buildUrl) {
+      this.provider = provider;
+      return this;
+    }
+
+    if (typeof provider === 'string' && this.constructor.parser) {
+      this.provider = this.constructor.parser.getProviderById(provider);
+      return this;
+    }
+
+    return this;
+  }
+
   setRegion(region) {
     this.region = region;
     return this;
+  }
+
+  async sign({
+    accessKeyId,
+    expires,
+    method,
+    secretAccessKey,
+  } = {}) {
+    if (!this.provider) {
+      throw new Error('Cannot sign url from invalid S3Url');
+    }
+
+    return this.provider.buildSignedUrl({
+      accessKeyId,
+      expires,
+      method,
+      s3Url: this,
+      secretAccessKey,
+    });
   }
 
   trimSlashes({ begin = false, end = false } = {}) {
