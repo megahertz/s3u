@@ -58,4 +58,13 @@ module.exports = {
     'prefer-template': 'off',
     strict: ['error', 'global'],
   },
+
+  overrides: [
+    {
+      files: ['*.ts'],
+      parserOptions: {
+        sourceType: 'module',
+      },
+    },
+  ],
 };

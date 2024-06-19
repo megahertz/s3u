@@ -48,7 +48,8 @@ class S3Provider {
     const url = new URL(this.buildUrl({ s3Url }));
     const time = new Date().toISOString().slice(0, 19).replace(/\W/g, '') + 'Z';
     const date = time.slice(0, 8);
-    const scope = `${date}/${s3Url.region}/s3/aws4_request`;
+    const signRegion = this.getSignRegion(s3Url);
+    const scope = `${date}/${signRegion}/s3/aws4_request`;
 
     url.searchParams.set('X-Amz-Algorithm', algo);
     url.searchParams.set('X-Amz-Credential', `${accessKeyId}/${scope}`);
@@ -72,7 +73,7 @@ class S3Provider {
 
     const signString = [algo, time, scope, await sha256(request)].join('\n');
 
-    const signPromise = [date, s3Url.region, 's3', 'aws4_request', signString]
+    const signPromise = [date, signRegion, 's3', 'aws4_request', signString]
       .reduce(
         (promise, data) => promise.then((prev) => hmacSha256(data, prev)),
         Promise.resolve('AWS4' + secretAccessKey)
@@ -105,6 +106,10 @@ class S3Provider {
     }
 
     return this.endpoint.replace('{region}.', '');
+  }
+
+  getSignRegion(s3Url) {
+    return s3Url.region;
   }
 
   matchHostName(hostName) {
@@ -160,7 +165,7 @@ class S3Provider {
   }
 
   parseRegion(hostname, s3Url) {
-    const hostnameParts = hostname.split('.');
+    const hostnameParts = hostname.split('.').filter(Boolean);
 
     if (hostnameParts.length > 0) {
       s3Url.setRegion(hostnameParts.shift());

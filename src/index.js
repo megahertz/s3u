@@ -3,6 +3,7 @@
 'use strict';
 
 const AmazonAwsProvider = require('./providers/AmazonAwsProvider');
+const CloudflareR2Provider = require('./providers/CloudflareR2Provider');
 const DigitalOceanSpacesProvider =
   require('./providers/DigitalOceanSpacesProvider');
 const S3Parser = require('./S3Parser');
@@ -15,9 +16,8 @@ const s3Parser = new S3Parser({
 
   providers: [
     new AmazonAwsProvider(),
-
+    new CloudflareR2Provider(),
     new DigitalOceanSpacesProvider(),
-
     new AmazonAwsProvider({
       domain: 'stackpathstorage.com',
       title: 'Stackpath',
