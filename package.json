@@ -43,10 +43,10 @@
   },
   "typings": "src/index.d.ts",
   "devDependencies": {
-    "eslint": "*",
-    "eslint-config-airbnb-base": "*",
-    "eslint-plugin-import": "*",
-    "humile": "*",
-    "typescript": "*"
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.29.1",
+    "humile": "^0.5.3",
+    "typescript": "^5.4.5"
   }
 }
