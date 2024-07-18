@@ -30,7 +30,7 @@ class S3Url {
     Object.assign(this, attrs);
 
     if (!(options instanceof S3Url)) {
-      dirPath && this.setFileName(dirPath);
+      dirPath && this.setDirPath(dirPath);
       fileName && this.setFileName(fileName);
       provider && this.setProvider(provider);
     }
