@@ -43,10 +43,14 @@ class S3Provider {
     expires = 60 * 60 * 24 * 7,
     method = 'GET',
     s3Url,
+    timestamp = Date.now(),
   }) {
     const algo = 'AWS4-HMAC-SHA256';
     const url = new URL(this.buildUrl({ s3Url }));
-    const time = new Date().toISOString().slice(0, 19).replace(/\W/g, '') + 'Z';
+    const time = new Date(timestamp)
+      .toISOString()
+      .slice(0, 19)
+      .replace(/\W/g, '') + 'Z';
     const date = time.slice(0, 8);
     const signRegion = this.getSignRegion(s3Url);
     const scope = `${date}/${signRegion}/s3/aws4_request`;

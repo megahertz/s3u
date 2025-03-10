@@ -24,13 +24,7 @@ class AmazonAwsProvider extends S3Provider {
       .join('.');
   }
 
-  async buildSignedUrl({
-    accessKeyId,
-    secretAccessKey,
-    expires,
-    method,
-    s3Url,
-  }) {
+  async buildSignedUrl({ s3Url, ...rest }) {
     const s3UrlCopy = s3Url.clone();
 
     if (!s3UrlCopy.region) {
@@ -41,13 +35,7 @@ class AmazonAwsProvider extends S3Provider {
       s3UrlCopy.setProtocol('https:');
     }
 
-    return super.buildSignedUrl({
-      accessKeyId,
-      secretAccessKey,
-      expires,
-      method,
-      s3Url: s3UrlCopy,
-    });
+    return super.buildSignedUrl({ ...rest, s3Url: s3UrlCopy });
   }
 
   parseBucket(hostname, s3Url) {
