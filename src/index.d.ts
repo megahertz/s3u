@@ -1,3 +1,11 @@
+interface SignOptions {
+  accessKeyId?: string,
+  expires?: number,
+  method?: 'GET' | 'PUT',
+  secretAccessKey?: string,
+  timestamp?: number,
+}
+
 export class S3Url {
   bucket: string;
   bucketPosition: 'hostname' | 'pathname';
@@ -36,14 +44,8 @@ export class S3Url {
   setProtocol(protocol: string): this;
   setProvider(provider: S3Provider | string): this;
   setRegion(region: string): this;
-
-  sign(opts?: {
-    accessKeyId?: string,
-    expires?: number,
-    method?: string,
-    secretAccessKey?: string,
-  }): Promise<string>
-
+  sign(options?: SignOptions): Promise<string>;
+  signSync(options?: SignOptions): string;
   trimSlashes(options?: { begin?: boolean; end?: boolean }): this;
 }
 
@@ -66,6 +68,8 @@ export class S3Provider implements ProviderInterface {
     title: string
   });
 
+  buildSignedUrl(options: SignOptions & { s3Url: S3Url }): Promise<string>;
+  buildSignedUrlSync(options: SignOptions & { s3Url: S3Url }): string;
   buildUrl({ s3Url }: { s3Url: S3Url }): string;
   getEndpoint({ region }?: { region: string }): string;
   matchHostName(hostName: string): boolean;

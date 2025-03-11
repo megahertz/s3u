@@ -6,9 +6,8 @@ const S3Url = require('./S3Url');
 const {
   decodeS3Key,
   encodeS3Key,
-  encodeSpecialUrlChars,
 } = require('./utils/encode');
-const { bufferToHex, hmacSha256, sha256 } = require('./utils/crypto');
+const { buildSignedUrl, buildSignedUrlSync } = require('./utils/sign');
 
 class S3Provider {
   constructor({ id, domain, endpoint, title } = {}) {
@@ -37,53 +36,20 @@ class S3Provider {
       .join('/');
   }
 
-  async buildSignedUrl({
-    accessKeyId = getEnv('AWS_ACCESS_KEY_ID'),
-    secretAccessKey = getEnv('AWS_SECRET_ACCESS_KEY'),
-    expires = 60 * 60 * 24 * 7,
-    method = 'GET',
-    s3Url,
-    timestamp = Date.now(),
-  }) {
-    const algo = 'AWS4-HMAC-SHA256';
-    const url = new URL(this.buildUrl({ s3Url }));
-    const time = new Date(timestamp)
-      .toISOString()
-      .slice(0, 19)
-      .replace(/\W/g, '') + 'Z';
-    const date = time.slice(0, 8);
-    const signRegion = this.getSignRegion(s3Url);
-    const scope = `${date}/${signRegion}/s3/aws4_request`;
+  async buildSignedUrl({ s3Url, ...options }) {
+    return buildSignedUrl({
+      ...options,
+      region: this.getSignRegion(s3Url),
+      url: this.buildUrl({ s3Url }),
+    });
+  }
 
-    url.searchParams.set('X-Amz-Algorithm', algo);
-    url.searchParams.set('X-Amz-Credential', `${accessKeyId}/${scope}`);
-    url.searchParams.set('X-Amz-Date', time);
-    url.searchParams.set('X-Amz-Expires', expires.toString(10));
-    url.searchParams.set('X-Amz-SignedHeaders', 'host');
-    url.searchParams.sort();
-
-    url.search = encodeSpecialUrlChars(url.search);
-    url.pathname = encodeSpecialUrlChars(url.pathname);
-
-    const request = [
-      method.toUpperCase(),
-      url.pathname,
-      url.search.slice(1),
-      `host:${url.host}`,
-      '',
-      'host',
-      'UNSIGNED-PAYLOAD',
-    ].join('\n');
-
-    const signString = [algo, time, scope, await sha256(request)].join('\n');
-
-    const signPromise = [date, signRegion, 's3', 'aws4_request', signString]
-      .reduce(
-        (promise, data) => promise.then((prev) => hmacSha256(data, prev)),
-        Promise.resolve('AWS4' + secretAccessKey)
-      );
-
-    return `${url.href}&X-Amz-Signature=${bufferToHex(await signPromise)}`;
+  buildSignedUrlSync({ s3Url, ...options }) {
+    return buildSignedUrlSync({
+      ...options,
+      region: this.getSignRegion(s3Url),
+      url: this.buildUrl({ s3Url }),
+    });
   }
 
   buildUrl({ s3Url }) {
@@ -205,14 +171,6 @@ class S3Provider {
 
     return s3Url;
   }
-}
-
-function getEnv(name) {
-  if (typeof process !== 'undefined' && process.env) {
-    return process.env[name];
-  }
-
-  return undefined;
 }
 
 module.exports = S3Provider;

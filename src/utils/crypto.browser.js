@@ -2,7 +2,15 @@
 
 /* eslint-env browser */
 
-module.exports = { bufferToHex, hmacSha256, sha256 };
+const sha = require('./sha256');
+
+module.exports = {
+  bufferToHex,
+  hmacSha256,
+  hmacSha256Sync,
+  sha256,
+  sha256Sync,
+};
 
 const encoder = new TextEncoder();
 
@@ -17,10 +25,18 @@ async function hmacSha256(message, secret) {
   return window.crypto.subtle.sign('HMAC', cryptoKey, toBuffer(message));
 }
 
+function hmacSha256Sync(message, secret) {
+  return sha.hmac_sha256(message, secret);
+}
+
 async function sha256(message) {
   return bufferToHex(
     await window.crypto.subtle.digest('SHA-256', toBuffer(message))
   );
+}
+
+function sha256Sync(message) {
+  return sha.sha256(message);
 }
 
 function bufferToHex(buffer) {

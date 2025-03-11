@@ -12,8 +12,8 @@ S3 URL manipulation helper similar to standard URL class
  - Support both Node.js and browser environment
  - Simple and lightweight
  - No dependencies
- - Typescript support
- - Built-in presigned URL generation
+ - TypeScript support
+ - Built-in presigned URL generation (sync and promised versions)
 
 ## Installation
 
@@ -64,9 +64,9 @@ S3Url {
 // Making a http copy
 const httpUrl = s3Url.clone({ protocol: 'http:' }).href;
 
-// Generaing presigned URL, AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+// Generaing presigned URL
 // env vars can be used instead of passing arguments
-const presignedUrl = s3Url.sign({ accessKeyId, secretAccessKey });
+const presignedUrl = await s3Url.sign({ accessKeyId, secretAccessKey });
 ```
 
 ## Providers
@@ -74,6 +74,7 @@ const presignedUrl = s3Url.sign({ accessKeyId, secretAccessKey });
 Currently, the library is tested with the following providers:
 
  - Amazon S3
+ - Cloudflare R2
  - DigitalOcean Spaces
  - Stackpath Storage
  - Generic provider (Supports URL schema like bucket.region.example.com)
@@ -91,7 +92,7 @@ s3Parser.addProvider(new S3Provider({
 
 ### Adding a custom provider implementation
 
-To add a parser for a custom provider you need to extend S3Provider class.
+To add a parser for a custom provider, you need to extend S3Provider class.
 You can use [AmazonAwsProvider.js](src/providers/AmazonAwsProvider.js) as 
 an example.
 

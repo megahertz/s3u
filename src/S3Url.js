@@ -134,23 +134,20 @@ class S3Url {
     return this;
   }
 
-  async sign({
-    accessKeyId,
-    expires,
-    method,
-    secretAccessKey,
-  } = {}) {
+  async sign(params = {}) {
     if (!this.provider) {
       throw new Error('Cannot sign url from invalid S3Url');
     }
 
-    return this.provider.buildSignedUrl({
-      accessKeyId,
-      expires,
-      method,
-      s3Url: this,
-      secretAccessKey,
-    });
+    return this.provider.buildSignedUrl({ ...params, s3Url: this });
+  }
+
+  signSync(params = {}) {
+    if (!this.provider) {
+      throw new Error('Cannot sign url from invalid S3Url');
+    }
+
+    return this.provider.buildSignedUrlSync({ ...params, s3Url: this });
   }
 
   trimSlashes({ begin = false, end = false } = {}) {
