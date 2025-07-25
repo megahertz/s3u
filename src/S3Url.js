@@ -167,6 +167,10 @@ class S3Url {
   }
 
   toString() {
+    if (!this.provider) {
+      return this.sourceUrl;
+    }
+
     return this.href;
   }
 
