@@ -85,6 +85,10 @@ export class S3Provider implements ProviderInterface {
 
 export class AmazonAwsProvider extends S3Provider {}
 
+export class CloudflareR2Provider extends S3Provider {}
+
+export class DigitalOceanSpacesProvider extends S3Provider {}
+
 export class S3Parser {
   providers: S3Provider[];
   fallbackProvider?: S3Provider;
